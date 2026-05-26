@@ -6,6 +6,7 @@ type PersistedSubscription = {
   subscriptionStatus: string;
   subscriptionPlan: "free" | PaidPlanKey;
   subscriptionPriceId: string | null;
+  cancelAtPeriodEnd: boolean;
   currentPeriodEnd: Date | null;
 };
 
@@ -100,6 +101,7 @@ export async function handleCheckoutSessionCompleted(
       subscriptionStatus: subscription.status,
       subscriptionPlan,
       subscriptionPriceId,
+      cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
       currentPeriodEnd: toDateFromUnix(getCurrentPeriodEndUnix(subscription)),
     },
   });
@@ -129,6 +131,7 @@ export async function handleSubscriptionUpdated(
       subscriptionStatus: subscription.status,
       subscriptionPlan,
       subscriptionPriceId,
+      cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
       currentPeriodEnd: toDateFromUnix(getCurrentPeriodEndUnix(subscription)),
     },
   });
@@ -155,6 +158,7 @@ export async function handleSubscriptionDeleted(
       subscriptionStatus: "canceled",
       subscriptionPlan: "free",
       subscriptionPriceId: null,
+      cancelAtPeriodEnd: false,
       currentPeriodEnd: null,
     },
   });

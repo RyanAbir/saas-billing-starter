@@ -6,6 +6,7 @@ export default async function DashboardPage() {
   const displayName = dbUser?.name || dbUser?.email || "there";
   const plan = dbUser?.subscriptionPlan ?? "free";
   const status = dbUser?.subscriptionStatus ?? "free";
+  const cancelAtPeriodEnd = Boolean(dbUser?.cancelAtPeriodEnd);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
@@ -25,6 +26,11 @@ export default async function DashboardPage() {
           </h2>
           <p className="mt-2 text-2xl font-semibold text-zinc-900">{plan}</p>
           <p className="mt-2 text-sm text-zinc-600">Subscription status: {status}</p>
+          {cancelAtPeriodEnd ? (
+            <p className="mt-2 text-sm text-amber-700">
+              Your Pro access remains active until the current billing period ends.
+            </p>
+          ) : null}
         </article>
 
         <article className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
