@@ -17,31 +17,31 @@ export async function getOrCreateCurrentDbUser() {
     return null;
   }
 
-  const clerkUser = await currentUser();
+  const existing = await prisma.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (existing) {
+    return existing;
+  }
+
+  let clerkUser: Awaited<ReturnType<typeof currentUser>>;
+  try {
+    clerkUser = await currentUser();
+  } catch (error) {
+    throw new Error(
+      `Unable to load Clerk profile for first-time user creation: ${
+        error instanceof Error ? error.message : "Unknown Clerk error"
+      }`,
+    );
+  }
+
   const email = getPreferredEmail(clerkUser);
   if (!email) {
     throw new Error("Signed-in Clerk user is missing a primary email address.");
   }
 
   const name = getPreferredName(clerkUser);
-
-  const existing = await prisma.user.findUnique({
-    where: { clerkUserId: userId },
-  });
-
-  if (existing) {
-    if (existing.email !== email || existing.name !== name) {
-      return prisma.user.update({
-        where: { id: existing.id },
-        data: {
-          email,
-          name,
-        },
-      });
-    }
-
-    return existing;
-  }
 
   return prisma.user.create({
     data: {
