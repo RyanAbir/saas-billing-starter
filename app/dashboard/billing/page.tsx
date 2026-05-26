@@ -63,6 +63,10 @@ export default async function BillingPage() {
         ) : null}
 
         <ManageBillingButton hasStripeCustomer={Boolean(dbUser?.stripeCustomerId)} />
+        <p className="mt-3 text-sm text-zinc-600">
+          Manage Billing opens Stripe Customer Portal for plan, payment method,
+          and cancellation settings.
+        </p>
       </section>
     </div>
   );

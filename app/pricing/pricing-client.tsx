@@ -106,8 +106,9 @@ export function PricingClient({ plans }: PricingClientProps) {
       </section>
 
       <p className="mt-8 rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
-        Stripe Checkout is now connected for Pro plans. Subscription sync and
-        billing portal will be added in a later phase.
+        Stripe Checkout is connected for Pro plans. Subscription status is
+        synced by Stripe webhooks, and billing can be managed from the
+        dashboard.
       </p>
 
       {state.error ? (

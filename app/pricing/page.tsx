@@ -9,8 +9,8 @@ export default function PricingPage() {
           Pricing
         </h1>
         <p className="mt-3 max-w-2xl text-zinc-600">
-          Choose a plan to continue to Stripe Checkout. Subscription status sync
-          will be added in a later phase.
+          Choose a plan and continue to secure Stripe Checkout to start or update
+          your subscription.
         </p>
       </section>
 
