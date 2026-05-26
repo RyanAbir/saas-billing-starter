@@ -34,6 +34,17 @@ User -> Pricing Page -> Checkout API -> Stripe Checkout -> Webhook -> Database -
 - [Architecture Guide](docs/ARCHITECTURE.md)
 - [Security Notes](SECURITY.md)
 
+## Screenshots
+
+![Landing page](docs/screenshots/Landing%20page.png)
+![Pricing page](docs/screenshots/Pricing%20page.png)
+![Dashboard with Pro plan](docs/screenshots/Dashboard%20with%20Pro%20plan.png)
+![Stripe Checkout page](docs/screenshots/Stripe%20Checkout%20page.png)
+![Billing page with scheduled cancellation state](docs/screenshots/Billing%20page%20with%20scheduled%20cancellation%20state.png)
+![Stripe Customer Portal showing active-scheduled cancellation](docs/screenshots/Stripe%20Customer%20Portal%20showing%20active-scheduled%20cancellation.png)
+
+More screenshots are available in [`docs/screenshots/`](docs/screenshots/).
+
 ## Environment Variables
 
 Create a `.env.local` file in the project root and use placeholder values like below:
