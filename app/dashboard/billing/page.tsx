@@ -1,4 +1,28 @@
-export default function BillingPage() {
+import { getOrCreateCurrentDbUser } from "@/lib/current-user";
+
+function formatDate(value: Date | null): string {
+  if (!value) {
+    return "Not applicable";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(value);
+}
+
+function titleCase(value: string): string {
+  if (!value) {
+    return "Free";
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export default async function BillingPage() {
+  const dbUser = await getOrCreateCurrentDbUser();
+
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
       <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Billing</h1>
@@ -8,15 +32,21 @@ export default function BillingPage() {
         <dl className="mt-5 space-y-3 text-sm text-zinc-700">
           <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
             <dt className="font-medium text-zinc-500">Current plan</dt>
-            <dd className="font-semibold text-zinc-900">Free</dd>
+            <dd className="font-semibold text-zinc-900">
+              {titleCase(dbUser?.subscriptionPlan ?? "free")}
+            </dd>
           </div>
           <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
             <dt className="font-medium text-zinc-500">Subscription status</dt>
-            <dd className="font-semibold text-zinc-900">Free</dd>
+            <dd className="font-semibold text-zinc-900">
+              {titleCase(dbUser?.subscriptionStatus ?? "free")}
+            </dd>
           </div>
           <div className="flex items-center justify-between">
             <dt className="font-medium text-zinc-500">Renewal date</dt>
-            <dd className="font-semibold text-zinc-900">Not applicable</dd>
+            <dd className="font-semibold text-zinc-900">
+              {formatDate(dbUser?.currentPeriodEnd ?? null)}
+            </dd>
           </div>
         </dl>
 

@@ -1,31 +1,17 @@
 import Link from "next/link";
-import { currentUser } from "@clerk/nextjs/server";
-
-function getDisplayName(
-  user: Awaited<ReturnType<typeof currentUser>>,
-): string {
-  if (!user) {
-    return "there";
-  }
-
-  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
-  if (fullName) {
-    return fullName;
-  }
-
-  return user.primaryEmailAddress?.emailAddress ?? "there";
-}
+import { getOrCreateCurrentDbUser } from "@/lib/current-user";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
-  const displayName = getDisplayName(user);
+  const dbUser = await getOrCreateCurrentDbUser();
+  const displayName = dbUser?.name || dbUser?.email || "there";
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
       <section className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Dashboard</h1>
         <p className="mt-3 text-zinc-600">Welcome, {displayName}.</p>
-        {/* Future phase: sync Clerk user to application database after sign-in. */}
+        <p className="mt-1 text-sm text-zinc-500">Account email: {dbUser?.email ?? "Not available"}</p>
+        {/* Future phase: enrich the local user record with billing and product metadata. */}
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-2">
