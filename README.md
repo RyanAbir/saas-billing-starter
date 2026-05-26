@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SaaS Billing Starter
 
-## Getting Started
+A production-style subscription billing system built with Next.js App Router and Stripe Billing.
 
-First, run the development server:
+## Features
+
+- Clerk authentication
+- Stripe Checkout subscription flow
+- Stripe Customer Portal
+- Webhook-based subscription sync
+- Prisma + Neon PostgreSQL persistence
+- Plan-based feature gating
+- Free plan project limit
+- Pro unlimited projects
+- Scheduled cancellation handling
+
+## Tech Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Clerk
+- Prisma
+- Neon PostgreSQL
+- Stripe Billing
+
+## Architecture Flow
+
+User -> Pricing Page -> Checkout API -> Stripe Checkout -> Webhook -> Database -> Dashboard/Billing -> Customer Portal
+
+## Environment Variables
+
+Create a `.env.local` file in the project root and use placeholder values like below:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_APP_URL=
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+DATABASE_URL=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_PRO_MONTHLY_PRICE_ID=
+STRIPE_PRO_YEARLY_PRICE_ID=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npx prisma generate
+npx prisma db push
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stripe Webhooks (Local)
 
-## Learn More
+```bash
+stripe login
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Stripe Test Card
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Card number: `4242 4242 4242 4242`
+- Expiry: any future date
+- CVC: any 3 digits
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## MVP User Flow
 
-## Deploy on Vercel
+Sign in -> choose plan -> checkout -> webhook sync -> billing page updates -> manage/cancel from portal
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Current Limitations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Test mode only
+- No team billing
+- No coupons
+- No trials
+- No usage-based billing
+- No deployment webhook setup yet
+
+## Portfolio Note
+
+This project demonstrates a real subscription lifecycle end-to-end, not just a checkout button. It includes authenticated billing, persistent subscription state, webhook-driven source of truth, cancellation lifecycle handling, and server-side feature gating.
