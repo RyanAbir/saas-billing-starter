@@ -28,6 +28,12 @@ A production-style subscription billing system built with Next.js App Router and
 
 User -> Pricing Page -> Checkout API -> Stripe Checkout -> Webhook -> Database -> Dashboard/Billing -> Customer Portal
 
+## Documentation
+
+- [Demo Guide](docs/DEMO_GUIDE.md)
+- [Architecture Guide](docs/ARCHITECTURE.md)
+- [Security Notes](SECURITY.md)
+
 ## Environment Variables
 
 Create a `.env.local` file in the project root and use placeholder values like below:
