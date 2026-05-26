@@ -39,6 +39,12 @@ const stripePriceIdByPlan: Record<PaidPlanKey, string | undefined> = {
   pro_yearly: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
 };
 
+const planByStripePriceId = Object.fromEntries(
+  Object.entries(stripePriceIdByPlan)
+    .filter((entry): entry is [PaidPlanKey, string] => Boolean(entry[1]))
+    .map(([plan, priceId]) => [priceId, plan]),
+) as Record<string, PaidPlanKey>;
+
 export function isPaidPlanKey(value: string): value is PaidPlanKey {
   return PLAN_KEYS.includes(value as PaidPlanKey);
 }
@@ -51,4 +57,12 @@ export function getStripePriceIdForPlan(plan: PaidPlanKey): string {
   }
 
   return priceId;
+}
+
+export function inferPlanFromPriceId(priceId: string | null | undefined): "free" | PaidPlanKey {
+  if (!priceId) {
+    return "free";
+  }
+
+  return planByStripePriceId[priceId] ?? "free";
 }

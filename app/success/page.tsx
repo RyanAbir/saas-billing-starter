@@ -6,8 +6,8 @@ export default function SuccessPage() {
       <section className="rounded-xl border border-zinc-200 bg-white p-8 shadow-sm">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Payment Success</h1>
         <p className="mt-3 text-zinc-600">
-          This placeholder confirms a completed payment. In a later phase, Stripe
-          Checkout will redirect users here after a successful session.
+          Your payment was received. Subscription access will update after Stripe
+          confirms the event via webhook.
         </p>
         <Link
           href="/dashboard"
