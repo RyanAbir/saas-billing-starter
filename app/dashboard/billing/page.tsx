@@ -1,4 +1,5 @@
 import { getOrCreateCurrentDbUser } from "@/lib/current-user";
+import { ManageBillingButton } from "./manage-billing-button";
 
 function formatDate(value: Date | null): string {
   if (!value) {
@@ -50,17 +51,7 @@ export default async function BillingPage() {
           </div>
         </dl>
 
-        <button
-          type="button"
-          disabled
-          className="mt-6 cursor-not-allowed rounded-md bg-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-500"
-        >
-          Manage Billing
-        </button>
-
-        <p className="mt-4 text-sm text-zinc-600">
-          Customer Portal will be connected in a later phase.
-        </p>
+        <ManageBillingButton hasStripeCustomer={Boolean(dbUser?.stripeCustomerId)} />
       </section>
     </div>
   );
