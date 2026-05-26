@@ -28,7 +28,7 @@ export default async function DashboardPage() {
           <p className="mt-2 text-sm text-zinc-600">Subscription status: {status}</p>
           {cancelAtPeriodEnd ? (
             <p className="mt-2 text-sm text-amber-700">
-              Your Pro access remains active until the current billing period ends.
+              Your Pro access remains active until the scheduled cancellation date.
             </p>
           ) : null}
         </article>

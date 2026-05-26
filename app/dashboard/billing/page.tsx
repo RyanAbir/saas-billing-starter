@@ -25,6 +25,9 @@ export default async function BillingPage() {
   const dbUser = await getOrCreateCurrentDbUser();
   const isScheduledToCancel = Boolean(dbUser?.cancelAtPeriodEnd);
   const periodLabel = isScheduledToCancel ? "Access until" : "Renewal date";
+  const periodDate = isScheduledToCancel
+    ? dbUser?.cancelAt ?? dbUser?.currentPeriodEnd ?? null
+    : dbUser?.currentPeriodEnd ?? null;
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
@@ -48,14 +51,14 @@ export default async function BillingPage() {
           <div className="flex items-center justify-between">
             <dt className="font-medium text-zinc-500">{periodLabel}</dt>
             <dd className="font-semibold text-zinc-900">
-              {formatDate(dbUser?.currentPeriodEnd ?? null)}
+              {formatDate(periodDate)}
             </dd>
           </div>
         </dl>
 
         {isScheduledToCancel ? (
           <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
-            Your subscription is scheduled to cancel at the end of the billing period.
+            Your subscription is scheduled to cancel.
           </p>
         ) : null}
 

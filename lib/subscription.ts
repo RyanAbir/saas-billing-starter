@@ -7,6 +7,7 @@ type PersistedSubscription = {
   subscriptionPlan: "free" | PaidPlanKey;
   subscriptionPriceId: string | null;
   cancelAtPeriodEnd: boolean;
+  cancelAt: Date | null;
   currentPeriodEnd: Date | null;
 };
 
@@ -30,6 +31,15 @@ function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | nu
   }
 
   return subscription.items.data[0]?.current_period_end ?? null;
+}
+
+function getCancelAtUnix(subscription: Stripe.Subscription): number | null {
+  const value = (subscription as unknown as { cancel_at?: number | null }).cancel_at;
+  return typeof value === "number" ? value : null;
+}
+
+function getDerivedCancelAtPeriodEnd(subscription: Stripe.Subscription): boolean {
+  return Boolean(subscription.cancel_at_period_end || getCancelAtUnix(subscription));
 }
 
 function resolvePlan(
@@ -84,6 +94,8 @@ function logWebhookSync(
     customerId?: string | null;
     priceId?: string | null;
     cancelAtPeriodEnd?: boolean;
+    cancelAtUnix?: number | null;
+    derivedCancelAtPeriodEnd?: boolean;
     updatedUsers?: number;
   },
 ) {
@@ -97,6 +109,8 @@ function logWebhookSync(
     customerId: details.customerId ?? null,
     priceId: details.priceId ?? null,
     cancelAtPeriodEnd: details.cancelAtPeriodEnd ?? null,
+    cancelAtUnix: details.cancelAtUnix ?? null,
+    derivedCancelAtPeriodEnd: details.derivedCancelAtPeriodEnd ?? null,
     updatedUsers: details.updatedUsers ?? null,
   });
 }
@@ -123,6 +137,8 @@ export async function handleCheckoutSessionCompleted(
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
   const subscriptionPriceId = getPrimaryPriceId(subscription);
   const subscriptionPlan = resolvePlan(session.metadata?.plan, subscriptionPriceId);
+  const cancelAtUnix = getCancelAtUnix(subscription);
+  const derivedCancelAtPeriodEnd = getDerivedCancelAtPeriodEnd(subscription);
 
   const updatedUsers = await updateUserByStripeIdentity({
     stripeCustomerId: customerId,
@@ -131,7 +147,8 @@ export async function handleCheckoutSessionCompleted(
       subscriptionStatus: subscription.status,
       subscriptionPlan,
       subscriptionPriceId,
-      cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+      cancelAtPeriodEnd: derivedCancelAtPeriodEnd,
+      cancelAt: toDateFromUnix(cancelAtUnix),
       currentPeriodEnd: toDateFromUnix(getCurrentPeriodEndUnix(subscription)),
     },
   });
@@ -141,6 +158,8 @@ export async function handleCheckoutSessionCompleted(
     customerId,
     priceId: subscriptionPriceId,
     cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+    cancelAtUnix,
+    derivedCancelAtPeriodEnd,
     updatedUsers,
   });
 
@@ -170,6 +189,8 @@ export async function handleSubscriptionUpdated(
 
   const subscriptionPriceId = getPrimaryPriceId(subscription);
   const subscriptionPlan = inferPlanFromPriceId(subscriptionPriceId);
+  const cancelAtUnix = getCancelAtUnix(subscription);
+  const derivedCancelAtPeriodEnd = getDerivedCancelAtPeriodEnd(subscription);
 
   const updatedUsers = await updateUserByStripeIdentity({
     stripeCustomerId: customerId,
@@ -178,7 +199,8 @@ export async function handleSubscriptionUpdated(
       subscriptionStatus: subscription.status,
       subscriptionPlan,
       subscriptionPriceId,
-      cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+      cancelAtPeriodEnd: derivedCancelAtPeriodEnd,
+      cancelAt: toDateFromUnix(cancelAtUnix),
       currentPeriodEnd: toDateFromUnix(getCurrentPeriodEndUnix(subscription)),
     },
   });
@@ -188,6 +210,8 @@ export async function handleSubscriptionUpdated(
     customerId,
     priceId: subscriptionPriceId,
     cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+    cancelAtUnix,
+    derivedCancelAtPeriodEnd,
     updatedUsers,
   });
 
@@ -220,6 +244,7 @@ export async function handleSubscriptionDeleted(
       subscriptionPlan: "free",
       subscriptionPriceId: null,
       cancelAtPeriodEnd: false,
+      cancelAt: null,
       currentPeriodEnd: null,
     },
   });
@@ -229,6 +254,8 @@ export async function handleSubscriptionDeleted(
     customerId,
     priceId: null,
     cancelAtPeriodEnd: false,
+    cancelAtUnix: null,
+    derivedCancelAtPeriodEnd: false,
     updatedUsers,
   });
 

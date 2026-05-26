@@ -16,6 +16,7 @@ model User {
   subscriptionPlan   String    @default("free")
   subscriptionPriceId String?
   cancelAtPeriodEnd  Boolean   @default(false)
+  cancelAt           DateTime?
   currentPeriodEnd   DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
