@@ -1,0 +1,37 @@
+export default function BillingPage() {
+  return (
+    <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">
+      <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Billing</h1>
+
+      <section className="mt-6 max-w-2xl rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-zinc-900">Billing Status</h2>
+        <dl className="mt-5 space-y-3 text-sm text-zinc-700">
+          <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+            <dt className="font-medium text-zinc-500">Current plan</dt>
+            <dd className="font-semibold text-zinc-900">Free</dd>
+          </div>
+          <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+            <dt className="font-medium text-zinc-500">Subscription status</dt>
+            <dd className="font-semibold text-zinc-900">Free</dd>
+          </div>
+          <div className="flex items-center justify-between">
+            <dt className="font-medium text-zinc-500">Renewal date</dt>
+            <dd className="font-semibold text-zinc-900">Not applicable</dd>
+          </div>
+        </dl>
+
+        <button
+          type="button"
+          disabled
+          className="mt-6 cursor-not-allowed rounded-md bg-zinc-200 px-4 py-2.5 text-sm font-semibold text-zinc-500"
+        >
+          Manage Billing
+        </button>
+
+        <p className="mt-4 text-sm text-zinc-600">
+          Customer Portal will be connected in a later phase.
+        </p>
+      </section>
+    </div>
+  );
+}
