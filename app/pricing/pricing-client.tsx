@@ -39,6 +39,13 @@ export function PricingClient({ plans }: PricingClientProps) {
 
       const payload = (await response.json()) as { url?: string; error?: string };
 
+      if (response.status === 409) {
+        throw new Error(
+          payload.error ||
+            "You already have an active Pro subscription. Manage billing from your dashboard.",
+        );
+      }
+
       if (!response.ok || !payload.url) {
         throw new Error(payload.error || "Unable to start checkout.");
       }

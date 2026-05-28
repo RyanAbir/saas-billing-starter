@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentDbUser } from "@/lib/current-user";
 import { getStripePriceIdForPlan, isPaidPlanKey, type PaidPlanKey } from "@/lib/plans";
+import { hasProAccess } from "@/lib/subscription-access";
 import { stripe } from "@/lib/stripe";
 
 type CheckoutBody = {
@@ -32,6 +33,16 @@ export async function POST(req: Request) {
     const dbUser = await getOrCreateCurrentDbUser();
     if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+
+    if (hasProAccess(dbUser)) {
+      return NextResponse.json(
+        {
+          error:
+            "You already have an active Pro subscription. Manage billing from your dashboard.",
+        },
+        { status: 409 },
+      );
     }
 
     const plan = requestedPlan as PaidPlanKey;
