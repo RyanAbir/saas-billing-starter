@@ -1,5 +1,4 @@
 import Link from "next/link";
-import type { Project } from "@prisma/client";
 import { getOrCreateCurrentDbUser } from "@/lib/current-user";
 import { prisma } from "@/lib/prisma";
 import { createProjectAction, deleteProjectAction } from "./actions";
@@ -7,6 +6,14 @@ import { FREE_PROJECT_LIMIT, hasProAccess } from "@/lib/subscription-access";
 
 type DashboardPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+type DashboardProject = {
+  id: string;
+  userId: string;
+  title: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
@@ -25,7 +32,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const cancelAtPeriodEnd = Boolean(dbUser?.cancelAtPeriodEnd);
   const isPro = hasProAccess(dbUser);
 
-  const projects: Project[] = await prisma.project.findMany({
+  const projects: DashboardProject[] = await prisma.project.findMany({
     where: { userId: dbUser.id },
     orderBy: { createdAt: "desc" },
   });
