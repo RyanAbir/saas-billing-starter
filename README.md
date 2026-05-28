@@ -2,17 +2,26 @@
 
 A production-style subscription billing system built with Next.js App Router and Stripe Billing.
 
+## Live Demo
+
+- Live URL (canonical): [https://saas-billing-starter-one.vercel.app](https://saas-billing-starter-one.vercel.app)
+- GitHub repository: [https://github.com/RyanAbir/saas-billing-starter](https://github.com/RyanAbir/saas-billing-starter)
+- Project status: Live demo deployed
+- Billing mode: Stripe test mode
+
 ## Features
 
 - Clerk authentication
 - Stripe Checkout subscription flow
 - Stripe Customer Portal
-- Webhook-based subscription sync
+- Stripe webhooks as the subscription source of truth
 - Prisma + Neon PostgreSQL persistence
-- Plan-based feature gating
+- Server-side plan-based feature gating
 - Free plan project limit
 - Pro unlimited projects
 - Scheduled cancellation handling
+- Duplicate subscription prevention for active Pro users
+- Vercel deployment
 
 ## Tech Stack
 
@@ -87,6 +96,8 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 Sign in -> choose plan -> checkout -> webhook sync -> billing page updates -> manage/cancel from portal
 
+For reliable demo behavior, use the canonical deployment URL: `https://saas-billing-starter-one.vercel.app`.
+
 ## Current Limitations
 
 - Test mode only
@@ -94,8 +105,7 @@ Sign in -> choose plan -> checkout -> webhook sync -> billing page updates -> ma
 - No coupons
 - No trials
 - No usage-based billing
-- No deployment webhook setup yet
 
 ## Portfolio Note
 
-This project demonstrates a real subscription lifecycle end-to-end, not just a checkout button. It includes authenticated billing, persistent subscription state, webhook-driven source of truth, cancellation lifecycle handling, and server-side feature gating.
+This project demonstrates a real subscription lifecycle end-to-end, not just a checkout button. It includes authenticated billing, persistent subscription state, webhook-driven source of truth, cancellation lifecycle handling, duplicate-subscription safeguards, and server-side feature gating.

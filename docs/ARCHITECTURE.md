@@ -1,5 +1,10 @@
 # Architecture Guide
 
+## Deployment
+
+- Frontend and Next.js API routes are hosted on Vercel.
+- Canonical public domain: [https://saas-billing-starter-one.vercel.app](https://saas-billing-starter-one.vercel.app)
+
 ## High-Level Architecture
 
 User -> Next.js App -> Clerk Auth -> Prisma/Neon
@@ -11,6 +16,8 @@ Billing -> Portal API -> Stripe Customer Portal -> Webhook -> Database
 - `/api/stripe/checkout`
 - `/api/stripe/webhook`
 - `/api/stripe/portal`
+
+Stripe webhook endpoint (public): `https://saas-billing-starter-one.vercel.app/api/stripe/webhook`
 
 ## Key Data Model
 

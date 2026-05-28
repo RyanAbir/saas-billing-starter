@@ -4,6 +4,11 @@
 
 Show a complete SaaS billing lifecycle, not just a checkout button.
 
+## Live Demo
+
+- Canonical URL: [https://saas-billing-starter-one.vercel.app](https://saas-billing-starter-one.vercel.app)
+- Billing mode: Stripe test mode
+
 ## Recommended Demo Order
 
 1. Landing page
@@ -17,6 +22,10 @@ Show a complete SaaS billing lifecycle, not just a checkout button.
 9. Customer Portal opens
 10. Cancel subscription from portal
 11. Billing page shows scheduled cancellation/access until
+
+## Live Test Flow
+
+Sign in -> Pricing -> Pro Monthly -> Stripe Checkout (test card) -> Success -> Billing.
 
 ## Screenshot Checklist
 
@@ -36,6 +45,12 @@ Show a complete SaaS billing lifecycle, not just a checkout button.
 - Card number: `4242 4242 4242 4242`
 - Expiry: any future date
 - CVC: any 3 digits
+
+## Duplicate Subscription Safeguard
+
+If a user already has active Pro access, checkout session creation is blocked to prevent duplicate subscriptions. The user sees:
+
+`You already have an active Pro subscription. Manage billing from your dashboard.`
 
 ## Local Commands
 
