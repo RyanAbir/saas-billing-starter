@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Project } from "@prisma/client";
 import { getOrCreateCurrentDbUser } from "@/lib/current-user";
 import { prisma } from "@/lib/prisma";
 import { createProjectAction, deleteProjectAction } from "./actions";
@@ -24,7 +25,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const cancelAtPeriodEnd = Boolean(dbUser?.cancelAtPeriodEnd);
   const isPro = hasProAccess(dbUser);
 
-  const projects = await prisma.project.findMany({
+  const projects: Project[] = await prisma.project.findMany({
     where: { userId: dbUser.id },
     orderBy: { createdAt: "desc" },
   });
